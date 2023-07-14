@@ -3,13 +3,14 @@ import {useSelector, useDispatch} from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import EventCart from "./components/EventCart";
 
-import {Row, Col, Image} from 'react-bootstrap';
+import {Row, Col, Image, Alert} from 'react-bootstrap';
 import { MdDeleteForever } from 'react-icons/md';
 import { removeEventFromCart, resetCart } from '../../app/eventCart/eventSlice';
 import { toast } from 'react-toastify';
 
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+import { selectAuthUser } from '../../app/auth/authSlice';
 
 const EventsCart = () => {
     const navigate = useNavigate();
@@ -17,6 +18,7 @@ const EventsCart = () => {
     const axiosPrivate = useAxiosPrivate();
 
     const {items} = useSelector(state => state.eventCart)
+    const user = useSelector(selectAuthUser);
 
     const [isButtonLoading, setIsButtonLoading] = useState(true);
 
@@ -58,6 +60,8 @@ const EventsCart = () => {
 
             <button className="btn btn-primary mb-4" onClick={() => navigate(-1)}>Go Back</button>
 
+            {user?.role !== 'Customer' && (<Alert variant='danger' className='mt-4'>Sorry, to order events you have to logged in as a customer</Alert>)}
+
             {items.length === 0 && <p className='text-center my-3'>No events in the cart</p>}
 
             {items.length > 0 && (
@@ -91,66 +95,68 @@ const EventsCart = () => {
                             ))}
                         </div>
                     </Col>
-                    <Col md={4}>
-                        <h4 className='mb-4'>Description</h4>
-                        <div className="shadow p-4 rounded">
-                            <ul className='m-0 p-0' style={{listStyle: 'none'}}>
-                                <li className='d-flex align-items-center justify-content-between mb-4' >
-                                    <span style={{flex: 1, fontSize: '14px', fontWeight: 500}}>Event</span>
-                                    <span style={{flex: 1, fontSize: '14px', fontWeight: 500, textAlign: 'center'}}>People</span>
-                                    <span style={{flex: 1, fontSize: '14px', fontWeight: 500, textAlign: 'end'}}>Total</span>
-                                </li>
-                                {items.map(e => (
-                                    <li key={e.id} className='d-flex align-items-center justify-content-between border-bottom pb-3 mt-3' >
-                                        <span style={{flex: 1}}>{e.name}</span>
-                                        <span style={{flex: 1, textAlign: 'center'}}>{e.people}</span>
-                                        <span style={{flex: 1, textAlign: 'end'}}>${(+e.price * +e.people).toFixed(2)}</span>
+                    {user?.role === 'Customer' && (
+                        <Col md={4}>
+                            <h4 className='mb-4'>Description</h4>
+                            <div className="shadow p-4 rounded">
+                                <ul className='m-0 p-0' style={{listStyle: 'none'}}>
+                                    <li className='d-flex align-items-center justify-content-between mb-4' >
+                                        <span style={{flex: 1, fontSize: '14px', fontWeight: 500}}>Event</span>
+                                        <span style={{flex: 1, fontSize: '14px', fontWeight: 500, textAlign: 'center'}}>People</span>
+                                        <span style={{flex: 1, fontSize: '14px', fontWeight: 500, textAlign: 'end'}}>Total</span>
                                     </li>
-                                ))}
-                                <li className='d-flex align-items-center justify-content-between border-bottom pb-3 mt-3'>
-                                    <span style={{fontSize: '20px', fontWeight: 500}}>Total</span>
-                                    <span style={{fontSize: '20px', fontWeight: 500}}>${items.reduce((acc, item) => acc + (+item.price * +item.people), 0).toFixed(2)}</span>
-                                </li>
+                                    {items.map(e => (
+                                        <li key={e.id} className='d-flex align-items-center justify-content-between border-bottom pb-3 mt-3' >
+                                            <span style={{flex: 1}}>{e.name}</span>
+                                            <span style={{flex: 1, textAlign: 'center'}}>{e.people}</span>
+                                            <span style={{flex: 1, textAlign: 'end'}}>${(+e.price * +e.people).toFixed(2)}</span>
+                                        </li>
+                                    ))}
+                                    <li className='d-flex align-items-center justify-content-between border-bottom pb-3 mt-3'>
+                                        <span style={{fontSize: '20px', fontWeight: 500}}>Total</span>
+                                        <span style={{fontSize: '20px', fontWeight: 500}}>${items.reduce((acc, item) => acc + (+item.price * +item.people), 0).toFixed(2)}</span>
+                                    </li>
 
-                                <li className='mt-3'>
-                                    <p className='text-center m-0 mb-2' style={{fontSize: '20px', fontWeight: 700}}>Reserve Now</p>
-                                    <PayPalScriptProvider 
-                                        options={{ "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID , components: "buttons", currency: "USD"}}
-                                        
-                                    >
-                                        
-                                            <PayPalButtons 
-                                                style={{ layout: "horizontal" }}
-                                                // forceReRender={[selectedPickupMethod, selectedPaymentType]}
-                                                // onClick={handlePreRequesits}
-                                                onInit={() => setIsButtonLoading(false)}
-                                                disabled={isButtonLoading}
-                                                createOrder={(data, actions) => {
+                                    <li className='mt-3'>
+                                        <p className='text-center m-0 mb-2' style={{fontSize: '20px', fontWeight: 700}}>Reserve Now</p>
+                                        <PayPalScriptProvider 
+                                            options={{ "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID , components: "buttons", currency: "USD"}}
+                                            
+                                        >
+                                            
+                                                <PayPalButtons 
+                                                    style={{ layout: "horizontal" }}
+                                                    // forceReRender={[selectedPickupMethod, selectedPaymentType]}
+                                                    // onClick={handlePreRequesits}
+                                                    onInit={() => setIsButtonLoading(false)}
+                                                    disabled={isButtonLoading}
+                                                    createOrder={(data, actions) => {
 
-                                                    return actions.order.create({
-                                                        purchase_units: [
-                                                            {
-                                                                amount: {
-                                                                    value: items.reduce((acc, item) => acc + (+item.price * +item.people), 0),
+                                                        return actions.order.create({
+                                                            purchase_units: [
+                                                                {
+                                                                    amount: {
+                                                                        value: items.reduce((acc, item) => acc + (+item.price * +item.people), 0),
+                                                                    },
                                                                 },
-                                                            },
-                                                        ],
-                                                    });
-                                                }}
-                                                onApprove={(data, actions) => {
-                                                    return actions.order.capture().then((details) => {
-                                                        handlePaymentSuccess(details);
-                                                    });
-                                                }}
-                                                
-                                            />
+                                                            ],
+                                                        });
+                                                    }}
+                                                    onApprove={(data, actions) => {
+                                                        return actions.order.capture().then((details) => {
+                                                            handlePaymentSuccess(details);
+                                                        });
+                                                    }}
+                                                    
+                                                />
 
-                                    </PayPalScriptProvider>
-                                </li>
+                                        </PayPalScriptProvider>
+                                    </li>
 
-                            </ul>
-                        </div>
-                    </Col>
+                                </ul>
+                            </div>
+                        </Col>
+                    )}
                 </Row>
             )}
         </>

@@ -53,6 +53,8 @@ import AllBookings from './features/bookings/AllBookings';
 import MyFoodOrders from './features/foods/MyFoodOrders';
 import AllFoodOrders from './features/foods/AllFoodOrders';
 import AllRentals from './features/vehicles/rentals/AllRentals';
+import SingleFoodOrder from './features/foods/SingleFoodOrder';
+import AllEventOrders from './features/events/AllEventOrders';
 
 const App = () => {
 
@@ -134,6 +136,13 @@ const App = () => {
           <Route element={<RequireAuth allowedRoles={['Customer']}/>}>
             <Route path='dash' element={<DashLayout />}>
               <Route path='foods/my-orders' element={<MyFoodOrders />} />
+            </Route>
+          </Route>
+
+          {/* /dash/foods/orders/ */}
+          <Route element={<RequireAuth allowedRoles={['Customer', 'Employee', 'Admin']}/>}>
+            <Route path='dash' element={<DashLayout />}>
+              <Route path='foods/orders/:id' element={<SingleFoodOrder />} />
             </Route>
           </Route>
 
@@ -245,6 +254,12 @@ const App = () => {
             </Route>
           </Route>
 
+          {/* /dash/employee/event-management/orders */}
+          <Route element={<RequireAuth allowedRoles={['Employee', 'Admin']}/>}>
+            <Route path='dash' element={<DashLayout />}>
+              <Route path='employee/event-management/orders' element={<AllEventOrders />} />
+            </Route>
+          </Route>
         
 
           {/* Admin Specific Routes */}

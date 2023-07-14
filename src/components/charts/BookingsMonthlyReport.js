@@ -47,6 +47,7 @@ const BookingsMonthlyReport = () => {
         const getMonthlyBookingData = async () => {
             try {
                 const response = await axiosPrivate.get('/api/rooms/bookings/monthly-report');
+                console.log(response.data.data);
                 setData(response.data.data);
             } catch (err) {
                 console.log(err);

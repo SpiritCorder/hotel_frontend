@@ -159,6 +159,8 @@ const RoomBookingModel = ({room, handleBookingModelClose}) => {
                                     endDate={endDate}
                                     selectsRange
                                     inline
+                                    minDate={new Date()}
+                                    
                                     // onDayMouseEnter={handleDateMouseEnter}
                                 />
                             </div>

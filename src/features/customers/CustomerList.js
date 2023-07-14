@@ -91,7 +91,7 @@ const CustomerList = () => {
                                     <td><p className='d-flex align-items-center justify-content-center' style={{width: 'max-content'}}><span>{c.role}</span></p></td>
                                     <td>
                                         <div className='d-flex align-items-center gap-2'>
-                                            <button className='btn btn-sm btn-success'>Update</button>
+                                            {/* <button className='btn btn-sm btn-success'>Update</button> */}
                                             <button className='btn btn-sm btn-danger' onClick={() => handleCustomerDelete(c.id)}>Delete</button>
                                         </div>
                                     </td>

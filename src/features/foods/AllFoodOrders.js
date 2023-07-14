@@ -42,6 +42,7 @@ const AllFoodOrders = () => {
                             <th>Order Price</th>
                             <th>Total Items Ordered</th>
                             <th>Order Date</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,6 +53,11 @@ const AllFoodOrders = () => {
                                 <td>${o.totalPrice}</td>
                                 <td>{o.totalItems}</td>
                                 <td>{moment(o.createdAt).utc().format('YYYY-MM-DD')}</td>
+                                <td>
+                                    <div>
+                                        <button className='btn btn-primary btn-sm' onClick={() => navigate(`/dash/foods/orders/${o.id}`)} >View More</button>
+                                    </div>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

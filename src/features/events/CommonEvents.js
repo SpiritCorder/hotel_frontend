@@ -37,7 +37,7 @@ const CommonEvents = () => {
             <button className='btn btn-primary mb-5' onClick={() => navigate(-1)} >Go Back</button>
 
             {commonEvents.length > 0 && (
-                <div className='d-flex flex-wrap justify-content-between'>
+                <div className='d-flex flex-wrap'>
                     {commonEvents.map(event => (
                         <EventCard event={event} key={event.id} />
                     ))}

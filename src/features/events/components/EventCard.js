@@ -34,7 +34,7 @@ const EventCard = ({event}) => {
     }
 
     return (
-        <div className="shadow p-3 rounded">
+        <div className="p-3 rounded">
             <Card style={{ width: '18rem' }}>
                 <Card.Img variant="top" src={event.image} />
                 <Card.Body>
