@@ -12,6 +12,7 @@ import {
     ResponsiveContainer
 } from "recharts";
 
+/*
 const data = [
     {
         category: "Sri Lankan",
@@ -50,20 +51,27 @@ const data = [
     },
     
 ];
-
+*/
 
 const PopularFoodCategory = () => {
 
     const axiosPrivate = useAxiosPrivate();
 
-    // const [data, setData] = useState([]);
+    const [data, setData] = useState([]);
 
     useEffect(() => {
         const getPopularCategories = async () => {
             try {
                 // eslint-disable-next-line
-                const response = await axiosPrivate.get('/api/foods/popular-categories');                
-                // setData(response.data.data);
+                const response = await axiosPrivate.get('/api/foods/popular-categories');
+                // console.log(response.data);
+                const updatedData = response.data.data.map(item => {
+                    if(item.category === 'no-category') {
+                        return {...item, category: 'Unspecified Categories'}
+                    }
+                    return item;
+                })                
+                setData(updatedData);
             } catch (err) {
                 console.log(err);
             }

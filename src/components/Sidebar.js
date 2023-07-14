@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {logoutAuthUser, selectAuthUser} from '../app/auth/authSlice';
 import {Link} from 'react-router-dom';
-import {MdStarBorderPurple500, MdDashboard, MdAccountCircle, MdOutlinePowerSettingsNew, MdSupervisedUserCircle, MdRoomPreferences, MdBedroomParent, MdOutlineFoodBank, MdBookmark, MdDirectionsCarFilled, MdCarRental, MdOutlineVpnKey, MdFastfood, MdEvent, MdKitesurfing } from "react-icons/md";
+import {MdStarBorderPurple500, MdDashboard, MdAccountCircle, MdOutlinePowerSettingsNew, MdSupervisedUserCircle, MdRoomPreferences, MdBedroomParent, MdOutlineFoodBank, MdBookmark, MdDirectionsCarFilled, MdCarRental, MdOutlineVpnKey, MdFastfood, MdEvent, MdKitesurfing, MdSetMeal } from "react-icons/md";
 import {FaUsers} from 'react-icons/fa';
 
 
@@ -79,12 +79,25 @@ const Sidebar = () => {
                         </Link>
                     </li>
 
-                    <li>
-                        <Link to='/dash/events/my-orders' className={`${currentPath === '/dash/events/my-orders' ? 'bg-white text-dark' : ''}`}>
-                            <MdStarBorderPurple500 />
-                            My Event Orders
-                        </Link>
-                    </li>
+                    {role === 'Customer' && (
+                        <>
+                            <li>
+                                <Link to='/dash/foods/my-orders' className={`${currentPath === '/dash/foods/my-orders' ? 'bg-white text-dark' : ''}`}>
+                                    <MdSetMeal />
+                                    My Food Orders
+                                </Link>
+                            </li>
+
+                            <li>
+                                <Link to='/dash/events/my-orders' className={`${currentPath === '/dash/events/my-orders' ? 'bg-white text-dark' : ''}`}>
+                                    <MdStarBorderPurple500 />
+                                    My Event Orders
+                                </Link>
+                            </li>
+                        </>
+                    )}
+
+                    
                     
 
                     {(role === 'Employee' || role === 'Admin') && (

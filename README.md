@@ -1,5 +1,6 @@
 # Getting Started with Create React App
 
+REACT_APP_PAYPAL_CLIENT_ID
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

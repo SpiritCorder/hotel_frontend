@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
+import {useParams, useNavigate, useSearchParams} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {selectAuthUser} from '../../../app/auth/authSlice';
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
@@ -19,7 +19,8 @@ const SingleRental = () => {
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
     const user = useSelector(selectAuthUser);
-   
+    const [searchParams] = useSearchParams();
+
     const [rental, setRental] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState({
@@ -82,7 +83,7 @@ const SingleRental = () => {
         ) : !error.isError ? (
             <>
                 <div className='d-flex align-items-center justify-content-end'>
-                    <button className='btn btn-primary mb-3' onClick={() => navigate('/dash/rentals/my')}>View All Rentals</button>
+                    <button className='btn btn-primary mb-3' onClick={() => navigate(searchParams.get('isEmployeeView') === 'true' ? '/dash/employee/vehicle-management/rentals' : '/dash/rentals/my')}>View All Rentals</button>
                 </div>
                 <h4 className='alert alert-info'>Rental ID : {rentalId} Details</h4>
                 <hr></hr>
@@ -172,6 +173,33 @@ const SingleRental = () => {
                             </div>
                         </div>
 
+                        {user.role !== 'Customer' && (
+                            <>
+                                <h3 className='my-3' style={{fontSize: '20px', fontWeight: 900}}>Customer Details</h3>
+                                <div className='p-3 shadow'>
+                                    <div className='mb-3'>
+                                        <img src={rental.customerData?.avatar} alt='avatar' style={{width: '60px', height: '60px', objectFit: 'cover', borderRadius: '50%'}} />
+                                    </div>
+                                    <div className='mb-3'>
+                                        <label className="text-dark mb-1" style={{fontSize: '14px', fontWeight: 500}}>Customer ID</label>
+                                        <p><span className='bg-dark text-white px-3 py-1 rounded' style={{fontWeight: 500}}>{rental.customerData?.id}</span></p>
+                                    </div>
+                                    <div className='mb-3'>
+                                        <label className="text-dark mb-1" style={{fontSize: '14px', fontWeight: 500}}>Customer Name</label>
+                                        <p>{`${rental.customerData?.firstName} ${rental.customerData?.lastName}`}</p>
+                                    </div>
+                                    <div className='mb-3'>
+                                        <label className="text-dark mb-1" style={{fontSize: '14px', fontWeight: 500}}>Customer Phone</label>
+                                        <p>{rental.customerData?.phone}</p>
+                                    </div>
+                                    <div className='mb-3'>
+                                        <label className="text-dark mb-1" style={{fontSize: '14px', fontWeight: 500}}>Customer Email</label>
+                                        <p>{rental.customerData?.email}</p>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
                         {rental.isFullyPaid === 'no' && ((rental.customerRole === 'Customer' && user.role === 'Customer' && rental.customerId.toString() === user.id.toString()) || (rental.customerRole === 'Employee' && (user.role === 'Employee' || user.role === 'Admin') && user.id.toString() === rental.customerId.toString())) && (
                             <>
                                 <h3 className='my-3' style={{fontSize: '20px', fontWeight: 900}}>Pay Now</h3>
@@ -222,32 +250,13 @@ const SingleRental = () => {
                             </>
                         )}
 
-                        {user.role !== 'Customer' && (rental.customerRole === 'Customer' || (rental.customerRole === 'Employee' && rental.customerId.toString() !== user.id.toString())) && (
-                            <>
-                                <h3 className='my-3' style={{fontSize: '20px', fontWeight: 900}}>Customer Details</h3>
-                                <div className='p-3 shadow'>
-                                    <div className='mb-3'>
-                                        <img src={rental.customerData?.avatar} alt='avatar' style={{width: '60px', height: '60px', objectFit: 'cover', borderRadius: '50%'}} />
-                                    </div>
-                                    <div className='mb-3'>
-                                        <label className="text-dark mb-1" style={{fontSize: '14px', fontWeight: 500}}>Customer ID</label>
-                                        <p><span className='bg-dark text-white px-3 py-1 rounded' style={{fontWeight: 500}}>{rental.customerData?.id}</span></p>
-                                    </div>
-                                    <div className='mb-3'>
-                                        <label className="text-dark mb-1" style={{fontSize: '14px', fontWeight: 500}}>Customer Name</label>
-                                        <p>{`${rental.customerData?.firstName} ${rental.customerData?.lastName}`}</p>
-                                    </div>
-                                    <div className='mb-3'>
-                                        <label className="text-dark mb-1" style={{fontSize: '14px', fontWeight: 500}}>Customer Phone</label>
-                                        <p>{rental.customerData?.phone}</p>
-                                    </div>
-                                    <div className='mb-3'>
-                                        <label className="text-dark mb-1" style={{fontSize: '14px', fontWeight: 500}}>Customer Email</label>
-                                        <p>{rental.customerData?.email}</p>
-                                    </div>
-                                </div>
-                            </>
-                        )}
+                        {/* {user.role !== 'Customer' && (rental.customerRole === 'Customer' || (rental.customerRole === 'Employee' && rental.customerId.toString() !== user.id.toString())) && ( */}
+                            
+                                                {/* && (rental.customerRole === 'Customer' || (rental.customerRole === 'Employee' && +rental.customerId !== +user.id ) */}
+
+                            
+                            
+                        
 
                     </Col>
 

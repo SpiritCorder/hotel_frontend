@@ -49,6 +49,10 @@ import CommonEvents from './features/events/CommonEvents';
 import SpecialEvents from './features/events/SpecialEvents';
 import EventsCart from './features/events/EventsCart';
 import EventOrders from './features/events/EventOrders';
+import AllBookings from './features/bookings/AllBookings';
+import MyFoodOrders from './features/foods/MyFoodOrders';
+import AllFoodOrders from './features/foods/AllFoodOrders';
+import AllRentals from './features/vehicles/rentals/AllRentals';
 
 const App = () => {
 
@@ -127,6 +131,12 @@ const App = () => {
             </Route>
           </Route>
 
+          <Route element={<RequireAuth allowedRoles={['Customer']}/>}>
+            <Route path='dash' element={<DashLayout />}>
+              <Route path='foods/my-orders' element={<MyFoodOrders />} />
+            </Route>
+          </Route>
+
           <Route element={<RequireAuth allowedRoles={['Customer', 'Employee', 'Admin']}/>}>
             <Route path='dash' element={<DashLayout />}>
               <Route path='events' element={<Events />} />
@@ -151,7 +161,7 @@ const App = () => {
             </Route>
           </Route>
 
-          <Route element={<RequireAuth allowedRoles={['Customer', 'Employee', 'Admin']}/>}>
+          <Route element={<RequireAuth allowedRoles={['Customer']}/>}>
             <Route path='dash' element={<DashLayout />}>
               <Route path='events/my-orders' element={<EventOrders />} />
             </Route>
@@ -164,6 +174,13 @@ const App = () => {
               <Route path='employee/customer-management' element={<CustomerList />} />
             </Route>
           </Route>
+
+            {/* /dash/employee/room-management/bookings */}
+            <Route element={<RequireAuth allowedRoles={['Employee', 'Admin']}/>}>
+              <Route path='dash' element={<DashLayout />}>
+                <Route path='employee/room-management/bookings' element={<AllBookings />} />
+              </Route>
+            </Route>
 
           <Route element={<RequireAuth allowedRoles={['Employee', 'Admin']}/>}>
             <Route path='dash' element={<DashLayout />}>
@@ -183,6 +200,14 @@ const App = () => {
             </Route>
           </Route>
 
+          {/* /dash/employee/vehicle-management/rentals */}
+          <Route element={<RequireAuth allowedRoles={['Employee', 'Admin']}/>}>
+            <Route path='dash' element={<DashLayout />}>
+              <Route path='employee/vehicle-management/rentals' element={<AllRentals />} />
+            </Route>
+          </Route>
+
+
           <Route element={<RequireAuth allowedRoles={['Employee', 'Admin']}/>}>
             <Route path='dash' element={<DashLayout />}>
               <Route path='employee/food-management' element={<FoodList />} />
@@ -201,6 +226,13 @@ const App = () => {
             </Route>
           </Route>
 
+          {/* /dash/employee/food-management/orders */}
+          <Route element={<RequireAuth allowedRoles={['Employee', 'Admin']}/>}>
+            <Route path='dash' element={<DashLayout />}>
+              <Route path='employee/food-management/orders' element={<AllFoodOrders />} />
+            </Route>
+          </Route>
+
           <Route element={<RequireAuth allowedRoles={['Employee', 'Admin']}/>}>
             <Route path='dash' element={<DashLayout />}>
               <Route path='employee/event-management' element={<EventList />} />
@@ -213,6 +245,7 @@ const App = () => {
             </Route>
           </Route>
 
+        
 
           {/* Admin Specific Routes */}
 

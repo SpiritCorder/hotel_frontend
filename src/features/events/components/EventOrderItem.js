@@ -40,8 +40,8 @@ const EventOrderItem = ({order}) => {
         </div>
             {isExpanded && (
                 <div className='p-3 shadow'>
-                    {order.items.map(item => (
-                        <div className='mb-3 d-flex align-items-start gap-5'>
+                    {order.items.map((item, index) => (
+                        <div className='mb-3 d-flex align-items-start gap-5' key={index} >
                             <div>
                                 <img src={item.image} alt={item.eventId} width={150} height={100} style={{objectFit: 'cover'}} />
                             </div>
